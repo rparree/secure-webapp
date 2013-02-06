@@ -1,0 +1,10 @@
+SecuirtyContextPersistenceFilter > initializes Holder and SecurityContext
+LogoutFilter > checks logout url and if needed logouts and redirects
+UsernamePasswordAuthenicationFilter > performs the authentication
+BasicAuthenticationFilter > attemps to perform HTTP Basic Authentication
+RequestCacheAwareFilter > go to requested page after authentication
+SecurityContextHolderAwareRequestFilter > wraps HttpServletRequest secuiryt methods for spring security
+AmnonymousAuthenticationFilter > adds anonymous athentication object if required
+SessionManagementFilter > session fixation and max concurrent sessions
+ExceptionTranslationFilter > map security exceptions to UI behaviour (e.g., HTTP 403)
+FilterSecurityInterceptor >  enforce security
