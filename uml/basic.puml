@@ -1,0 +1,30 @@
+@startuml
+
+
+SecurityContext -> Authentication
+Authentication  -> "*" GrantedAuthority
+UsernamePasswordAuthenticationToken ..|>Authentication
+SimpleGrantedAuthority ..|> GrantedAuthority
+class SimpleGrantedAuthority<<string>>
+
+
+class UsernamePasswordAuthenticationToken
+
+interface SecurityContext <<threadlocal>>{
+}
+
+interface Authentication <<token>>{
+  credentials/pwd
+  principal
+  details
+  authenticated
+
+
+}
+
+interface GrantedAuthority{
+  String authority
+}
+
+
+@enduml
