@@ -8,6 +8,8 @@ import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.WebDriver
 
 
+
+
 /**
  * todo
  */
@@ -15,10 +17,24 @@ class LoginSpec extends FlatSpec with ShouldMatchers with WebBrowser with OneIns
 
   val BASE_URL = "http://localhost:8080/secure-webapp"
 
-  type MyDriver = FirefoxDriver
+  type MyDriver = HtmlUnitDriver
 
   def john  = it
   def jennnifer  = it
+
+
+
+  object Fixture{
+    def apply(){
+      import com.mongodb.casbah.Imports._
+      val coll=  MongoClient()("mongodb")("member")
+      coll.remove(MongoDBObject.empty)
+      coll += MongoDBObject("username"->"jennifer","password"->"masterkey", "roles"->Array("ROLE_MEMBER","ROLE_CASHCOW"))
+      coll += MongoDBObject("username"->"john","password"->"masterkey", "roles"->Array("ROLE_MEMBER"))
+
+    }
+  }
+
 
   private def login(username: String, password: String)(implicit webDriver : WebDriver) {
 
@@ -30,6 +46,7 @@ class LoginSpec extends FlatSpec with ShouldMatchers with WebBrowser with OneIns
   }
 
   "regular member, john" should "have shop access" in {
+    Fixture()
     implicit val webDriver = new MyDriver
     go to (BASE_URL + "/shop")
     login("john", "masterkey")
@@ -38,6 +55,7 @@ class LoginSpec extends FlatSpec with ShouldMatchers with WebBrowser with OneIns
 
   }
   john should "have no access to specials area" in{
+    Fixture()
     implicit val webDriver = new MyDriver
     go to (BASE_URL + "/shop/specials/movies.html")
     login("john","masterkey")
@@ -47,30 +65,15 @@ class LoginSpec extends FlatSpec with ShouldMatchers with WebBrowser with OneIns
 
   "special member, jennifer" should "have access to specials area" in {
     implicit val webDriver = new MyDriver
-
+    Fixture()
     go to (BASE_URL + "/shop/specials/movies.html")
     login("jennifer", "masterkey")
     pageTitle should include("Specials")
     webDriver.close()
   }
 
-  "a member who logges out" should "have no longer access" in {
-    implicit val webDriver = new MyDriver
-    go to (BASE_URL + "/shop/specials/movies.html")
-    login("jennifer", "masterkey")
-    click on id("logout")
-    find("alert-message") match {
-      case Some(m: Element) => m.text should include("logged out")
-      case _ => fail("expected an alert message")
-
-    }
-    go to (BASE_URL + "/shop/specials/movies.html")
-    reloadPage() // grrr
-    currentUrl should include("login-form.jsp")
-    webDriver.close()
-  }
-
   "a visitor" should "need to login to access restricted pages" in {
+    Fixture()
     implicit val webDriver = new MyDriver
     go to (BASE_URL + "/shop")
     login("no-user@example.com", "incorrectpassword")
@@ -84,3 +87,5 @@ class LoginSpec extends FlatSpec with ShouldMatchers with WebBrowser with OneIns
   }
 
 }
+
+
