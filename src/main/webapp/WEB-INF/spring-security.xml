@@ -2,7 +2,10 @@
 <bean:beans xmlns:bean="http://www.springframework.org/schema/beans"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns="http://www.springframework.org/schema/security"
-            xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+            xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+            xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+             http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+             http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd">
 
   <http pattern="/static/**" security="none"/>
 
@@ -22,10 +25,12 @@
   </http>
   <authentication-manager>
     <authentication-provider>
-      <user-service>
-        <user name="jennifer" password="secret" authorities="ROLE_MEMBER, ROLE_CASHCOW"/>
-        <user name="john" password="secret" authorities="ROLE_MEMBER"/>
-      </user-service>
+     <jdbc-user-service data-source-ref="dataSource"/>
     </authentication-provider>
   </authentication-manager>
+
+  <jdbc:embedded-database id="dataSource" type="H2">
+    <jdbc:script location="classpath:schema.sql"/>
+    <jdbc:script location="classpath:data.sql"/>
+  </jdbc:embedded-database>
 </bean:beans>

@@ -32,7 +32,7 @@ class LoginSpec extends FlatSpec with ShouldMatchers with WebBrowser with OneIns
   "regular member, john" should "have shop access" in {
     implicit val webDriver = new MyDriver
     go to (BASE_URL + "/shop")
-    login("john", "secret")
+    login("john", "$ecret")
     pageTitle should be("Shop")
     webDriver.close()
 
@@ -40,7 +40,7 @@ class LoginSpec extends FlatSpec with ShouldMatchers with WebBrowser with OneIns
   john should "have no access to specials area" in{
     implicit val webDriver = new MyDriver
     go to (BASE_URL + "/shop/specials/movies.html")
-    login("john","secret")
+    login("john","$ecret")
     pageTitle should include ("No access")
     webDriver.close()
   }
@@ -49,7 +49,7 @@ class LoginSpec extends FlatSpec with ShouldMatchers with WebBrowser with OneIns
     implicit val webDriver = new MyDriver
 
     go to (BASE_URL + "/shop/specials/movies.html")
-    login("jennifer", "secret")
+    login("jennifer", "$ecret")
     pageTitle should include("Specials")
     webDriver.close()
   }
@@ -57,7 +57,7 @@ class LoginSpec extends FlatSpec with ShouldMatchers with WebBrowser with OneIns
   "a member who logges out" should "have no longer access" in {
     implicit val webDriver = new MyDriver
     go to (BASE_URL + "/shop/specials/movies.html")
-    login("jennifer", "secret")
+    login("jennifer", "$ecret")
     click on id("logout")
     find("alert-message") match {
       case Some(m: Element) => m.text should include("logged out")
