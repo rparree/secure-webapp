@@ -48,17 +48,50 @@ public class Option<T> {
     return new Option<M>(mapper.map(value));
   }
 
+  public <F extends T> T getValueOr(Creator<F> creator){
+    T fallback = creator.create();
+    if (fallback!=null){
+      return fallback;
+    }
+    else
+      throw new IllegalArgumentException("Your creator returns null");
+  }
+
+  public <F extends T> F getValueOr(Class<F> type,  DefaultCreator<F> creator){
+    F fallback = null;
+    try {
+      fallback = type.newInstance();
+      creator.init(fallback);
+      return fallback;
+    } catch (InstantiationException  | IllegalAccessException e) {
+
+      throw new IllegalArgumentException("cannot call default constructor of " + type,e);
+    }
+
+
+  }
+
   public void doWith(DoWith<T> doWith) {
     if (hasValue())
       doWith.run(value);
   }
 
+
+
   public interface Mapper<F, T> {
     T map(F f);
   }
 
+  public interface Creator<T> {
+    T create();
+  }
+
+  public interface DefaultCreator<T> {
+    void init(final T object);
+  }
+
   public interface DoWith<T> {
-    void run(T value);
+    void run(final T value);
   }
 
   public <E extends Exception> T getValueOrThrowException(Class<E> e, String message) throws E {

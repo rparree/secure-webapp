@@ -29,6 +29,10 @@
             Reason: <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/>.
         </div>
     </c:if>
+    <c:if test="${param.logout!=null}">
+        <div id="alert-message">You have been logged out.</div>
+    </c:if>
+
 
     <!-- Simple OpenID Selector -->
     <form action="<c:url value='openid-login'/>" method="post" id="openid_form">

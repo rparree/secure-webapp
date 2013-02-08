@@ -16,7 +16,10 @@
 
   </head>
   <body>
-    <h1>Welcome ${pageContext.request.remoteUser} </h1>
+
+
+
+      <h1>Welcome <sec:authentication property='principal.displayName'/></h1>
 
 
 
