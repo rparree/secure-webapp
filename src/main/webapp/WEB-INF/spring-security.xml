@@ -11,14 +11,15 @@
 
 
     <intercept-url pattern="/users/change-password.jsp*" access="isFullyAuthenticated()"/>
-
+    <intercept-url pattern="/users/**" requires-channel="https"/>
+    <intercept-url pattern="/shop/**" requires-channel="https"/>
     <intercept-url pattern="/shop/specials/**" access="hasRole('ROLE_CASHCOW')"/>
     <intercept-url pattern="/shop/**" access="hasRole('ROLE_MEMBER')"/>
 
     <form-login login-page="/users/login-form.jsp"
                 login-processing-url="/users/login"
                 authentication-failure-url="/users/login-form.jsp?error"
-                default-target-url="/shop"/>
+                default-target-url="/shop"  />
 
     <logout logout-url="/users/logout" delete-cookies=""
             logout-success-url="/users/login-form.jsp?logout"/>
@@ -26,7 +27,9 @@
     <!--2592000 is 30 days -->
     <remember-me key="demo-app" token-validity-seconds="2592000"
                  data-source-ref="dataSource" />
-
+    <port-mappings>
+      <port-mapping http="8080" https="8443"/>
+    </port-mappings>
   </http>
   <authentication-manager>
     <authentication-provider>

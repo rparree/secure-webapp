@@ -29,6 +29,16 @@ class LoginSpec extends FlatSpec with ShouldMatchers with WebBrowser with OneIns
     click on id("submit")
   }
 
+  "users " should "are redirected to https to login" in {
+    implicit val webDriver = new MyDriver
+    go to (BASE_URL + "/users/login-form.jsp")
+    currentUrl should startWith ("https")
+
+    webDriver.close()
+
+  }
+
+
   "regular member, john" should "have shop access" in {
     implicit val webDriver = new MyDriver
     go to (BASE_URL + "/shop")
