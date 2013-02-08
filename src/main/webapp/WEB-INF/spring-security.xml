@@ -15,19 +15,17 @@
     <intercept-url pattern="/shop/specials/**" access="hasRole('ROLE_CASHCOW')"/>
     <intercept-url pattern="/shop/**" access="hasRole('ROLE_MEMBER')"/>
 
-    <form-login login-page="/users/login-form.jsp"
-                login-processing-url="/users/login"
-                authentication-failure-url="/users/login-form.jsp?error"
-                default-target-url="/shop"/>
+    <openid-login login-page="/users/openid-login-form.jsp"
+                  login-processing-url="/users/openid-login"
+                  authentication-failure-url="/users/openid-login-form.jsp?error"
+                  default-target-url="/shop"
+          user-service-ref=""/>
 
     <logout logout-url="/users/logout"
             logout-success-url="/users/login-form.jsp?logout"/>
   </http>
   <authentication-manager>
     <authentication-provider>
-      <password-encoder hash="sha-256">
-        <salt-source user-property="username"/>
-      </password-encoder>
      <jdbc-user-service data-source-ref="dataSource"/>
     </authentication-provider>
   </authentication-manager>
